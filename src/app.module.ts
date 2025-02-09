@@ -9,6 +9,11 @@ import { AppCommand } from './command/app.command';
 import { PackageDetailsQuestions } from './command/package-details.questions';
 import { BaseDetailsQuestions } from './command/base-details.questions';
 import { CostEstimationService } from './cost-estimation/cost-estimation.service';
+import { DeliveryTimeEstimationService } from './delivery-time-estimation/delivery-time-estimation.service';
+import {
+  DeliveryVehicleDetailsQuestions,
+  EstimateDeliveryQuestions,
+} from './command/delivery-details.questions';
 
 @Module({
   imports: [CostEstimationModule, DeliveryTimeEstimationModule, OfferModule],
@@ -20,6 +25,9 @@ import { CostEstimationService } from './cost-estimation/cost-estimation.service
     PackageDetailsQuestions,
     BaseDetailsQuestions,
     CostEstimationService,
+    DeliveryTimeEstimationService,
+    DeliveryVehicleDetailsQuestions,
+    EstimateDeliveryQuestions,
   ],
 })
 export class AppModule {}

@@ -9,7 +9,9 @@ describe('DeliveryTimeEstimationService', () => {
       providers: [DeliveryTimeEstimationService],
     }).compile();
 
-    service = module.get<DeliveryTimeEstimationService>(DeliveryTimeEstimationService);
+    service = module.get<DeliveryTimeEstimationService>(
+      DeliveryTimeEstimationService,
+    );
   });
 
   it('should be defined', () => {
