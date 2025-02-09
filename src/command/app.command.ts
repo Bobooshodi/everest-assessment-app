@@ -55,6 +55,7 @@ export class AppCommand extends CommandRunner {
       const details = vehicleDetails.split(' ');
 
       const deliveryEstimationDTO = new GetDeliveryTimeEstimationDto();
+      deliveryEstimationDTO.costEstimates = estimates;
       deliveryEstimationDTO.packages = packageDetails;
       deliveryEstimationDTO.vehicleCount = parseInt(details[0]);
       deliveryEstimationDTO.maxWeight = parseInt(details[2]);

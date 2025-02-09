@@ -7,6 +7,17 @@ import { OfferService } from 'src/offer/offer.service';
 export class CostEstimationService {
   constructor(private readonly offerService: OfferService) {}
 
+  /**
+   * This function takes in a base delivery cost and an array of package details.
+   * It iterates through the array, finds the offer that matches the package detail's offer code,
+   * and calculates the final cost for each package using the offer.
+   * If no offer is found, it calculates the cost using the base cost and package details.
+   * The function returns an array of objects with the package id, delivery cost, and discount.
+   * If an error occurs, it logs the error and returns null.
+   * @param baseDeliveryCost The base cost of delivery.
+   * @param packageDetails An array of package details.
+   * @returns An array of objects with the package id, delivery cost, and discount or null if an error occurs.
+   */
   async estimateCost(
     baseDeliveryCost: number,
     packageDetails: PackageDetails[],

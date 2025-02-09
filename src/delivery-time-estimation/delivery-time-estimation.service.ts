@@ -6,11 +6,24 @@ import { AppService } from 'src/app.service';
 @Injectable()
 export class DeliveryTimeEstimationService {
   constructor(private readonly appService: AppService) {}
+  /**
+   * Create a delivery time estimation for a given list of packages, vehicle count, maximum weight, and maximum speed.
+   * The algorithm works as follows:
+   * 1. Choose the vehicle that is available the earliest.
+   * 2. Determine the best shipment from the remaining packages.
+   * 3. If no valid shipment can be formed (e.g. package too heavy), schedule the first package individually.
+   * 4. For each package in the selected shipment, set its delivery time.
+   * 5. Update the vehicle’s next available time (round-trip based on the farthest package).
+   * 6. Remove the scheduled packages from the list.
+   * 7. Repeat steps 1-6 until all packages have been scheduled.
+   * @param createDeliveryTimeEstimationDto The input data for the estimation.
+   * @returns A log of the estimated delivery times for each package (in minutes).
+   */
   async create(createDeliveryTimeEstimationDto: GetDeliveryTimeEstimationDto) {
     const { vehicleCount, maxWeight, maxSpeed, packages } =
       createDeliveryTimeEstimationDto;
 
-    const timeLog: Record<string, number> = {};
+    const timeLog = createDeliveryTimeEstimationDto.costEstimates || [];
     // Each vehicle’s available time (initially 0).
     const availableVehicles: number[] = Array(vehicleCount).fill(0);
     // Work on a copy of the package list.
@@ -33,7 +46,10 @@ export class DeliveryTimeEstimationService {
           const deliveryTime =
             vehicleAvailableTime +
             this.appService.truncateTo2DP(pkg.distance / maxSpeed);
-          timeLog[pkg.id] = this.appService.truncateTo2DP(deliveryTime);
+
+          const index = timeLog.findIndex((t) => t.package === pkg.id);
+          timeLog[index].deliveryTime =
+            this.appService.truncateTo2DP(deliveryTime);
         }
         continue;
       }
@@ -43,7 +59,9 @@ export class DeliveryTimeEstimationService {
         const deliveryTime =
           vehicleAvailableTime +
           this.appService.truncateTo2DP(pkg.distance / maxSpeed);
-        timeLog[pkg.id] = this.appService.truncateTo2DP(deliveryTime);
+        const index = timeLog.findIndex((t) => t.package === pkg.id);
+        timeLog[index].deliveryTime =
+          this.appService.truncateTo2DP(deliveryTime);
       });
 
       // Update the vehicle’s next available time (round-trip based on the farthest package).

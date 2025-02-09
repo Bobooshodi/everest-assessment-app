@@ -5,4 +5,5 @@ export class GetDeliveryTimeEstimationDto {
   maxWeight: number;
   maxSpeed: number;
   packages: PackageDetails[];
+  costEstimates?: any[];
 }
